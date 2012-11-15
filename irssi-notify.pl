@@ -1,7 +1,7 @@
 # irssi-notify.pl
 use Irssi;
 
-$::VERSION='0.0.1';
+$::VERSION='0.1.0';
 %::IRSSI = (
     authors => 'Ashish Shukla,Nemesis Fixx',
     contact => 'gmail.com!wahjava,gmail.com!joewillrich',
