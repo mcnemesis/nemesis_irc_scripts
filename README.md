@@ -7,7 +7,7 @@ irssi-notify.pl
 ---------------
 (originally by Ashish Shukla) : 
 
-    - Displays a pop-up message for message received 
+    - Displays a pop-up message for message received (No-longer depends on Net::DBus -- uses notify-send)
 
     - Plays sound notification alongside the notification pop-up (new addition)
 
@@ -28,10 +28,4 @@ point the variables "private_sound" and "public_sound" (at the top of the script
     -- that the paplay command is installed (all modern *nix systems ought to have it)
     -- and that the notification sound file /usr/share/sounds/KDE-Im-Irc-Event.ogg exists
     -- and the perl exists
-    -- and that the Net::DBus perl module is installed
-
-Those last two requirements are inherited from the original script.
-
-**TODO**:
-
-    - maybe switch from using Net::DBus to using the command notify-send (tests on my opensuse have shown this might work)
+    -- and that the notify-send command is on the PATH

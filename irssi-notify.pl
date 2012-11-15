@@ -1,45 +1,40 @@
 # irssi-notify.pl
 use Irssi;
-use Net::DBus;
 
-$::VERSION='0.0.2';
+$::VERSION='0.0.1';
 %::IRSSI = (
     authors => 'Ashish Shukla,Nemesis Fixx',
     contact => 'gmail.com!wahjava,gmail.com!joewillrich',
     name => 'irssi-notify',
-    description => 'Displays a pop-up message for message received (and play notification sound)',
+    description => 'Displays a pop-up message for message received [no Net::DBus dependecy]',
     url => 'http://wahjava.wordpress.com/',
     license => 'GNU General Public License',
     changed => '$Date$'
-);
+    );
 
 my $APPNAME = 'irssi';
+my $NOTIFY_COMMAND = 'notify-send';
 
-my $bus = Net::DBus->session;
-my $notifications = $bus->get_service('org.freedesktop.Notifications');
-my $object = $notifications->get_object('/org/freedesktop/Notifications',
-					'org.freedesktop.Notifications');
-
-#--------- Changes (for me) --------------#
 my $notify_nick = 'nemesisfixx';
-#notification sounds (am asuming KDE IM notification sound defaults?)
+
+#notification sounds (am asuming KDE IM defaults?)
 my $public_sound = '/usr/share/sounds/KDE-Im-Irc-Event.ogg';
 my $private_sound = '/usr/share/sounds/KDE-Im-Irc-Event.ogg';
-#-----------------------------------------#
 
-# $object->Notify('appname', 0, 'info', 'Title', 'Message', [], { }, 3000);
+system($NOTIFY_COMMAND, "-c","${APPNAME}", "-t","3000", "-i","info", "${APPNAME} Started", "U are ready to rock IRC!\nYo Notify Script in place too :-)");
 
 sub pub_msg {
     my ($server,$msg,$nick,$address,$target) = @_;
 
     if ($msg =~ $notify_nick)
     {
-        $object->Notify("${APPNAME}:${server}",
-                0,
-                'info',
+        system($NOTIFY_COMMAND,
+            "-c", "${APPNAME}:${server}",
+                "-t", "3000",
+                "-i", "info",
                 "Public IRC Message in $target",
                 "$nick: $msg",
-                [], { }, 3000);
+                );
         #play sound too ;-)
         system('paplay',$public_sound);
     }
@@ -47,12 +42,15 @@ sub pub_msg {
 
 sub priv_msg {
     my ($server,$msg,$nick,$address) = @_;
-    $object->Notify("${APPNAME}:${server}",
-		    0,
-		    'info',
-		    'Private IRC Message',
-		    "$nick: $msg",
-		    [], { }, 3000);
+
+    system($NOTIFY_COMMAND,
+        "-c", "${APPNAME}:${server}",
+            "-t", "3000",
+            "-i", "info",
+            "Private IRC Message in $target",
+            "$nick: $msg",
+            );
+
     #play sound too ;-)
     system('paplay',$private_sound);
 }
@@ -62,11 +60,11 @@ sub cmd_notifyon {
 
     if(!$nick)
     {
-        Irssi::print("Current notification nick is $notify_nick .");
+	Irssi::print("Current notification nick is $notify_nick .");
     }
     else
     {
-        $notify_nick = $nick;
+	$notify_nick = $nick;
     }
 }
 
